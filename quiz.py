@@ -1,6 +1,5 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-
 import json
 import os
 
@@ -21,9 +20,7 @@ def save_leaderboard():
 # Глобальная таблица лидеров загружается из файла
 global_leaderboard = load_leaderboard()
 
-
 # Массив вопросов
-
 sample_questions = [
     {
         "question": "Как расшифровывается LTS?",
@@ -278,25 +275,34 @@ sample_questions = [
         "correct_answer": "a"
     },
     {
-        "question": "Когда в GitLab запускается пайплайн?",
+        "question": "Когда в GitLab запускается пайплайн?", 
         "answers": [
-            "При любом изменении в удалённом репозитории"
-        ],
-        "correct_answer": "При любом изменении в удалённом репозитории"
+            "a) При любом изменении в удалённом репозитории", 
+            "b) Только при изменениях в ветке master", 
+            "c) Когда пользователь вручную запускает пайплайн", 
+            "d) Когда пайплайн запускается по расписанию"
+        ], 
+        "correct_answer": "a"
     },
     {
-        "question": "Напишите этапы CI:",
+        "question": "Напишите этапы CI:", 
         "answers": [
-            "build, test"
-        ],
-        "correct_answer": "build, test"
+            "a) build, test", 
+            "b) deploy, test", 
+            "c) build, deploy", 
+            "d) test, publish"
+        ], 
+        "correct_answer": "a"
     },
     {
-        "question": "Напишите этапы CD:",
+        "question": "Напишите этапы CD:", 
         "answers": [
-            "deploy staging, deploy production, publish, update configs"
-        ],
-        "correct_answer": "deploy staging, deploy production, publish, update configs"
+            "a) deploy staging, deploy production, publish, update configs", 
+            "b) test, build, deploy", 
+            "c) build, deploy staging", 
+            "d) deploy production, rollback"
+        ], 
+        "correct_answer": "a"
     },
     {
         "question": "Что такое GitLab Runner? Это сервис, который...",
@@ -309,11 +315,14 @@ sample_questions = [
         "correct_answer": "b"
     },
     {
-        "question": "Какая команда в GitLab CI сохраняет файлы на 10 дней?",
+        "question": "Какая команда в GitLab CI сохраняет файлы на 10 дней?", 
         "answers": [
-            "expire_in: 10 days"
-        ],
-        "correct_answer": "expire_in: 10 days"
+            "a) expire_in: 10 days", 
+            "b) save_for: 10 days", 
+            "c) keep_files: 10 days", 
+            "d) store_for: 10 days"
+        ], 
+        "correct_answer": "a"
     },
     {
         "question": "Как определить успешность этапа пайплайна CI/CD?",
@@ -375,11 +384,14 @@ sample_questions = [
         "correct_answer": "c"
     },
     {
-        "question": "За что отвечает протокол NTP?",
+        "question": "За что отвечает протокол NTP?", 
         "answers": [
-            "За синхронизацию времени компьютера"
-        ],
-        "correct_answer": "За синхронизацию времени компьютера"
+            "a) За синхронизацию времени компьютера", 
+            "b) За передачу данных между компьютерами", 
+            "c) За настройку сетевых интерфейсов", 
+            "d) За защиту от вирусов и атак"
+        ], 
+        "correct_answer": "a"
     },
     {
         "question": "В чём отличие ncdu от du?",
@@ -778,9 +790,6 @@ sample_questions = [
      "correct_answer": "a"}
 ]
 
-# Глобальная таблица лидеров
-global_leaderboard = {}  # {user_id: {"username": str, "score": int}}
-
 # Состояния квиза
 active_quizzes = {}  # {chat_id: {"current_index": int, "scores": {user_id: score}}}
 
@@ -847,8 +856,7 @@ async def end_quiz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     # Обновляем глобальную таблицу лидеров
     for user_id, score in quiz["scores"].items():
-        user = await update.effective_chat.get_member(user_id)
-        username = user.user.first_name
+        username = update.effective_user.first_name
         if user_id not in global_leaderboard:
             global_leaderboard[user_id] = {"username": username, "score": 0}
         global_leaderboard[user_id]["score"] += score
@@ -876,6 +884,35 @@ async def show_records(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     )
     await update.message.reply_text(f"Текущая таблица лидеров:\n\n{leaderboard}")
 
+# Функция для остановки квиза и отображения результатов
+async def stop_quiz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = update.effective_chat.id
+
+    # Если квиз не активен, выводим сообщение
+    quiz = active_quizzes.pop(chat_id, None)
+    if not quiz:
+        await update.message.reply_text("Нет активного квиза, чтобы его остановить.")
+        return
+
+    # Обновляем глобальную таблицу лидеров
+    for user_id, score in quiz["scores"].items():
+        username = update.effective_user.first_name
+        if user_id not in global_leaderboard:
+            global_leaderboard[user_id] = {"username": username, "score": 0}
+        global_leaderboard[user_id]["score"] += score
+
+    # Сохраняем таблицу лидеров в файл
+    save_leaderboard()
+
+    # Формируем таблицу лидеров для квиза
+    scores = quiz["scores"]
+    if scores:
+        leaderboard = "\n".join(
+            [f"{(await update.effective_chat.get_member(user_id)).user.first_name}: {score}" for user_id, score in sorted(scores.items(), key=lambda x: x[1], reverse=True)]
+        )
+        await update.message.reply_text(f"Квиз завершен! 🎉\nТаблица лидеров для этого квиза:\n\n{leaderboard}")
+    else:
+        await update.message.reply_text("Никто не ответил на вопросы. 😔")
 
 # Основной код
 def main():
@@ -885,6 +922,7 @@ def main():
     # Регистрируем команды
     application.add_handler(CommandHandler("quiz", start_kwiz))
     application.add_handler(CommandHandler("records", show_records))
+    application.add_handler(CommandHandler("stop", stop_quiz))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_answer))
 
     # Запускаем бота

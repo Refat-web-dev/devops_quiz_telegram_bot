@@ -252,25 +252,34 @@ sample_questions = [
         "correct_answer": "a"
     },
     {
-        "question": "Когда в GitLab запускается пайплайн?",
+        "question": "Когда в GitLab запускается пайплайн?", 
         "answers": [
-            "При любом изменении в удалённом репозитории"
-        ],
-        "correct_answer": "При любом изменении в удалённом репозитории"
+            "a) При любом изменении в удалённом репозитории", 
+            "b) Только при изменениях в ветке master", 
+            "c) Когда пользователь вручную запускает пайплайн", 
+            "d) Когда пайплайн запускается по расписанию"
+        ], 
+        "correct_answer": "a"
     },
     {
-        "question": "Напишите этапы CI:",
+        "question": "Напишите этапы CI:", 
         "answers": [
-            "build, test"
-        ],
-        "correct_answer": "build, test"
+            "a) build, test", 
+            "b) deploy, test", 
+            "c) build, deploy", 
+            "d) test, publish"
+        ], 
+        "correct_answer": "a"
     },
     {
-        "question": "Напишите этапы CD:",
+        "question": "Напишите этапы CD:", 
         "answers": [
-            "deploy staging, deploy production, publish, update configs"
-        ],
-        "correct_answer": "deploy staging, deploy production, publish, update configs"
+            "a) deploy staging, deploy production, publish, update configs", 
+            "b) test, build, deploy", 
+            "c) build, deploy staging", 
+            "d) deploy production, rollback"
+        ], 
+        "correct_answer": "a"
     },
     {
         "question": "Что такое GitLab Runner? Это сервис, который...",
@@ -283,11 +292,14 @@ sample_questions = [
         "correct_answer": "b"
     },
     {
-        "question": "Какая команда в GitLab CI сохраняет файлы на 10 дней?",
+        "question": "Какая команда в GitLab CI сохраняет файлы на 10 дней?", 
         "answers": [
-            "expire_in: 10 days"
-        ],
-        "correct_answer": "expire_in: 10 days"
+            "a) expire_in: 10 days", 
+            "b) save_for: 10 days", 
+            "c) keep_files: 10 days", 
+            "d) store_for: 10 days"
+        ], 
+        "correct_answer": "a"
     },
     {
         "question": "Как определить успешность этапа пайплайна CI/CD?",
@@ -349,11 +361,14 @@ sample_questions = [
         "correct_answer": "c"
     },
     {
-        "question": "За что отвечает протокол NTP?",
+        "question": "За что отвечает протокол NTP?", 
         "answers": [
-            "За синхронизацию времени компьютера"
-        ],
-        "correct_answer": "За синхронизацию времени компьютера"
+            "a) За синхронизацию времени компьютера", 
+            "b) За передачу данных между компьютерами", 
+            "c) За настройку сетевых интерфейсов", 
+            "d) За защиту от вирусов и атак"
+        ], 
+        "correct_answer": "a"
     },
     {
         "question": "В чём отличие ncdu от du?",
