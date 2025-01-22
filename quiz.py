@@ -1,5 +1,6 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+
 import json
 import os
 
@@ -20,7 +21,9 @@ def save_leaderboard():
 # Глобальная таблица лидеров загружается из файла
 global_leaderboard = load_leaderboard()
 
+
 # Массив вопросов
+
 sample_questions = [
     {
         "question": "Как расшифровывается LTS?",
@@ -790,6 +793,9 @@ sample_questions = [
      "correct_answer": "a"}
 ]
 
+# Глобальная таблица лидеров
+global_leaderboard = {}  # {user_id: {"username": str, "score": int}}
+
 # Состояния квиза
 active_quizzes = {}  # {chat_id: {"current_index": int, "scores": {user_id: score}}}
 
@@ -856,7 +862,8 @@ async def end_quiz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     # Обновляем глобальную таблицу лидеров
     for user_id, score in quiz["scores"].items():
-        username = update.effective_user.first_name
+        user = await update.effective_chat.get_member(user_id)
+        username = user.user.first_name
         if user_id not in global_leaderboard:
             global_leaderboard[user_id] = {"username": username, "score": 0}
         global_leaderboard[user_id]["score"] += score
@@ -884,35 +891,6 @@ async def show_records(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     )
     await update.message.reply_text(f"Текущая таблица лидеров:\n\n{leaderboard}")
 
-# Функция для остановки квиза и отображения результатов
-async def stop_quiz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat_id = update.effective_chat.id
-
-    # Если квиз не активен, выводим сообщение
-    quiz = active_quizzes.pop(chat_id, None)
-    if not quiz:
-        await update.message.reply_text("Нет активного квиза, чтобы его остановить.")
-        return
-
-    # Обновляем глобальную таблицу лидеров
-    for user_id, score in quiz["scores"].items():
-        username = update.effective_user.first_name
-        if user_id not in global_leaderboard:
-            global_leaderboard[user_id] = {"username": username, "score": 0}
-        global_leaderboard[user_id]["score"] += score
-
-    # Сохраняем таблицу лидеров в файл
-    save_leaderboard()
-
-    # Формируем таблицу лидеров для квиза
-    scores = quiz["scores"]
-    if scores:
-        leaderboard = "\n".join(
-            [f"{(await update.effective_chat.get_member(user_id)).user.first_name}: {score}" for user_id, score in sorted(scores.items(), key=lambda x: x[1], reverse=True)]
-        )
-        await update.message.reply_text(f"Квиз завершен! 🎉\nТаблица лидеров для этого квиза:\n\n{leaderboard}")
-    else:
-        await update.message.reply_text("Никто не ответил на вопросы. 😔")
 
 # Основной код
 def main():
@@ -922,7 +900,6 @@ def main():
     # Регистрируем команды
     application.add_handler(CommandHandler("quiz", start_kwiz))
     application.add_handler(CommandHandler("records", show_records))
-    application.add_handler(CommandHandler("stop", stop_quiz))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_answer))
 
     # Запускаем бота
