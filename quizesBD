@@ -506,7 +506,7 @@ sample_questions = [
                  "c) Сетевой, Транспортный, Физический, Виртуальный, Представления", 
                  "d) Технический, Прикладной, Сеансовый, Сетевой, Физический"], 
      "correct_answer": "a"},
-    {"question": "Вывести построчно в цикле for var in $(cat $file)", "answers": ["a) IFS=$’/n’", "b) IFS=$’//n’", "c) IFS=$’\n’", "d) IFS=$’ln’"], "correct_answer": "c"},
+    {"question": "Вывести построчно в цикле for var in $(cat $file)", "answers": ["a) IFS=$’/n’", "b) IFS=$’//n’", "c) IFS=$’\\n’", "d) IFS=$’ln’"], "correct_answer": "c"},
     {"question": "Как удалить все правила из iptables?", "answers": ["a) iptables -F", "b) iptables -L", "c) iptables -X", "d) iptables -R"], "correct_answer": "a"},
     {"question": "Как посмотреть данные по сетевому интерфейсу?", "answers": ["a) tcpdump -i eth0 / tcpdump --interface eth0", "b) tcpdump eth0", "c) tcpdump -l eth0"], "correct_answer": "a"},
     {"question": "Как удалить Docker-образ?", "answers": ["a) docker images rm nginx", "b) docker rmi nginx", "c) docker rm –i nginx", "d) docker rm nginx"], "correct_answer": "b"},
