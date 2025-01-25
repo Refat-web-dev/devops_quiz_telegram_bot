@@ -184,10 +184,9 @@ sample_questions = [
     {
         "question": "Как посмотреть версию docker?",
         "answers": [
-            "a) docker version",
+            "a) docker version / docker info",
             "b) docker ls",
-            "c) docker info",
-            "d) docker status"
+            "c) docker status"
         ],
         "correct_answer": "a"
     },
@@ -451,7 +450,7 @@ sample_questions = [
     {"question": "Что произойдёт, если после вызова read не указать переменную? Результат ввода сохранится в:", "answers": ["a) ANSWER", "b) RESULT", "c) QUESTION", "d) REPLY"], "correct_answer": "d"},
     {"question": "Как перенаправить stdout из одной команды в stdin другой?", "answers": ["a) cmd1 <> cmd2", "b) cmd1 2 > cmd2", "c) cmd1 < cmd2", "d) cmd1 | cmd2"], "correct_answer": "d"},
     {"question": "Что делает команда sed -e '1s/Aobba/Aboba/;3,$s/Abboa/Aboba/' myfile?", "answers": ["a) Заменяет Aobba на Aboba в первой строке и Abboa на Aboba с третьей строки до конца", "b) Заменяет все строки файла на Aboba", "c) Удаляет строки с текстом Abboa", "d) Выводит первые три строки файла"], "correct_answer": "a"},
-    {"question": "Какой командой вывести 5 последних строк файла?", "answers": ["a) cat file --lines=5", "b) head file lines=5", "c) tail --lines=5 file", "d) tail file --lines=5"], "correct_answer": "c"},
+    {"question": "Какой командой вывести 5 последних строк файла?", "answers": ["a) cat file --lines=5", "b) head file lines=5", "c) tail --lines=5 file / tail file --lines=5"], "correct_answer": "c"},
     {"question": "Что неверно в команде touch file1 | cp file1 /tmp/?", "answers": ["a) Неправильный символ |", "b) Отсутствует ключ -r у команды cp", "c) Отсутствует ключ -c у команды touch", "d) Лишний / в пути клонирования"], "correct_answer": "a"},
     {"question": "Какой формат конфигов используется в Dockerfile?", "answers": ["a) Текстовый", "b) YAML", "c) JSON", "d) Config"], "correct_answer": "a"},
     {"question": "Что делает команда docker inspect? Отображает информацию о:", "answers": ["a) Контейнере", "b) Выполненных процессах", "c) Использованных ресурсах", "d) Сети Docker"], "correct_answer": "a"},
@@ -827,5 +826,5 @@ sample_questions = [
                  "b) Контейнеры и виртуальные машины одинаковы, разница только в цене.", 
                  "c) Контейнеризация использует виртуальные машины, а виртуализация работает с контейнерами.", 
                  "d) Контейнеризация требует больше ресурсов, чем виртуализация, и наоборот."], 
-     "correct_answer": "a"}
+     "correct_answer": "a"}    
 ]
